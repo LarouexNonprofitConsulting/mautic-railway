@@ -77,23 +77,6 @@ file_put_contents(\$configFile, '<?php' . PHP_EOL . '\$parameters = ' . var_expo
 log "[mautic_web]: Running migrations..."
 su -s /bin/bash "$MAUTIC_WWW_USER" -c "php $MAUTIC_CONSOLE doctrine:migrations:migrate -n"
 
-# Mautic logs its own caught exceptions (via ExceptionListener's Monolog
-# logger, confirmed via real source) somewhere under var/, not
-# stdout/stderr, so real errors (e.g. the "Site is offline" generic page)
-# never show up in `railway logs`. A single `tail -F *.log` missed it
-# (glob expanded before any file existed), so this polls broadly instead:
-# every 5s, print any file under var/ modified in the last 10s.
-log "[mautic_web]: MAUTIC_VOLUME_LOGS=${MAUTIC_VOLUME_LOGS} MAUTIC_VAR=${MAUTIC_VAR}"
-(
-  while true; do
-    find "${MAUTIC_VAR}" -type f -newermt '-10 seconds' 2>/dev/null | while read -r f; do
-      echo "[log-watch]: === $f ==="
-      cat "$f"
-    done
-    sleep 5
-  done
-) &
-
 # A real matching case on Mautic's own forum ("Site is offline after
 # update to 6.0") traced the identical generic error page to var/cache
 # and var/tmp/twig not being writable by the web server user - those
