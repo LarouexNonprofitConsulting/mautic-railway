@@ -1,0 +1,14 @@
+{
+  "name": "NPHS Newsletter",
+  "author": "Normandy Park Historical Society",
+  "authorUrl": "https://normandyparkhs.org",
+  "builder": [
+    "grapesjsbuilder"
+  ],
+  "features": [
+    "email"
+  ],
+  "tags": [
+    "newsletter"
+  ]
+}

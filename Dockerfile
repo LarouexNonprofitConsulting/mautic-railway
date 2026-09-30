@@ -71,6 +71,11 @@ RUN chmod +x /startup/wait_for_mautic_install.sh
 # override is still needed (and drop it) once a 7.2.0+ image is published.
 COPY OverrideIncludeExtension.php /var/www/html/docroot/app/bundles/CoreBundle/Twig/Extension/OverrideIncludeExtension.php
 
+# NPHS email theme (header, body and the website's footer). Baked into the
+# image because uploaded themes land in docroot/themes, which is not on the
+# persistent volume and would disappear on the next redeploy.
+COPY themes/nphs /var/www/html/docroot/themes/nphs
+
 ENTRYPOINT ["/docker-entrypoint-wrapper.sh"]
 
 EXPOSE 80
